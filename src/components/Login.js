@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import axiosWithAuth from "../utils/axiosWithAuth";
 
-function Login() {
+function Login({ setIsLoggedIn }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
@@ -17,6 +17,7 @@ function Login() {
         password,
       });
       localStorage.setItem("token", response.data.token);
+      setIsLoggedIn(true); // Update the App state
       const from = location.state?.from?.pathname || "/";
       navigate(from, { replace: true });
     } catch (error) {

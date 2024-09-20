@@ -1,15 +1,25 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
 import Dashboard from "./components/Dashboard";
 import Books from "./components/Books";
 import Reservations from "./components/Reservations";
-import UserManagement from "./components/Users"; // Import the UserManagement component
+import UserManagement from "./components/Users";
 import Login from "./components/Login";
 import PrivateRoute from "./components/PrivateRoute";
 
 function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      setIsLoggedIn(true);
+    }
+  }, []);
+
   const handleLogout = () => {
     localStorage.removeItem("token");
+    setIsLoggedIn(false);
     window.location = "/login";
   };
 
@@ -32,14 +42,16 @@ function App() {
                   <NavLink to="/users">Users</NavLink>
                 </div>
               </div>
-              <div className="flex items-center">
-                <button
-                  onClick={handleLogout}
-                  className="bg-indigo-500 hover:bg-indigo-600 text-white px-4 py-2 rounded-md text-sm font-medium transition duration-150 ease-in-out"
-                >
-                  Logout
-                </button>
-              </div>
+              {isLoggedIn && (
+                <div className="flex items-center">
+                  <button
+                    onClick={handleLogout}
+                    className="bg-indigo-500 hover:bg-indigo-600 text-white px-4 py-2 rounded-md text-sm font-medium transition duration-150 ease-in-out"
+                  >
+                    Logout
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         </nav>
@@ -77,11 +89,11 @@ function App() {
                     path="/users"
                     element={
                       <PrivateRoute>
-                        <UserManagement /> {/* Use UserManagement here */}
+                        <UserManagement />
                       </PrivateRoute>
                     }
                   />
-                  <Route path="/login" element={<Login />} />
+                  <Route path="/login" element={<Login setIsLoggedIn={setIsLoggedIn} />} />
                 </Routes>
               </div>
             </div>

@@ -49,7 +49,13 @@ function Reservations() {
           <li key={reservation._id} className="py-4">
             <div className="flex items-center justify-between">
               <p className="text-lg font-semibold text-indigo-600 truncate">
-                {reservation.user.name} - {reservation.book.title}
+                {reservation.user && reservation.user.name
+                  ? reservation.user.name
+                  : "Unknown User"}{" "}
+                -{" "}
+                {reservation.book && reservation.book.title
+                  ? reservation.book.title
+                  : "Unknown Book"}
               </p>
               <p
                 className={`px-3 py-1 text-sm rounded-full ${
